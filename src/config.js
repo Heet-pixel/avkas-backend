@@ -5,7 +5,9 @@ const isProd = process.env.NODE_ENV === "production";
 
 const list = (v) => (v || "").split(",").map((s) => s.trim()).filter(Boolean);
 
-const origins = list(process.env.CORS_ORIGINS || "https://avkasco.com,https://www.avkasco.com").map((o) => o.replace(/\/+$/, ""));
+// Always allowed: the Render test site and the final domain. CORS_ORIGINS can ADD more (comma separated).
+const BUILT_IN_ORIGINS = ["https://avkas.onrender.com", "https://avkasco.com", "https://www.avkasco.com"];
+const origins = [...new Set([...BUILT_IN_ORIGINS, ...list(process.env.CORS_ORIGINS)].map((o) => o.replace(/\/+$/, "")))];
 if (!isProd) for (const port of [3000, 5500, 8080]) origins.push(`http://localhost:${port}`, `http://127.0.0.1:${port}`); // local dev servers (npx serve, Live Server…)
 
 const cfg = {
