@@ -35,9 +35,12 @@ async function once(key, work) {
   return { first: true };
 }
 
-setInterval(() => {
-  const cutoff = Date.now() - TTL_MS;
-  for (const [k, v] of store) if (v.ts < cutoff) store.delete(k);
-}, 30 * 60 * 1000).unref();
+setInterval(
+  () => {
+    const cutoff = Date.now() - TTL_MS;
+    for (const [k, v] of store) if (v.ts < cutoff) store.delete(k);
+  },
+  30 * 60 * 1000,
+).unref();
 
 module.exports = { once };
